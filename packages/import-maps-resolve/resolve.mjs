@@ -1,21 +1,10 @@
-/** @typedef {import('./types').ParsedImportMap} ParsedImportMap */
-/** @typedef {import('./types').ParsedScopesMap} ParsedScopesMap */
-/** @typedef {import('./types').ParsedSpecifierMap} ParsedSpecifierMap */
+import assert from 'node:assert';
+import tryURLLikeSpecifierParse from './tryURLLikeSpecifierParse.mjs';
+import tryURLParse from './tryURLParse.mjs';
 
-const _assert = require('assert');
-// NB: TS casts the `required` function to a const, then pukes on the assertion
-// see https://github.com/microsoft/TypeScript/issues/34523#issuecomment-542978853
-/**
- *
- * @param {*} x
- * @param {string|Error} [message]
- * @return {asserts x}
- */
-function assert(x, message) {
-  return _assert(x, message);
-}
-
-const { tryURLLikeSpecifierParse, tryURLParse } = require('./utils.js');
+/** @typedef {import('./types.js').ParsedImportMap} ParsedImportMap */
+/** @typedef {import('./types.js').ParsedScopesMap} ParsedScopesMap */
+/** @typedef {import('./types.js').ParsedSpecifierMap} ParsedSpecifierMap */
 
 /**
  * @param {string} normalizedSpecifier
@@ -67,7 +56,7 @@ function resolveImportsMatch(normalizedSpecifier, specifierMap) {
  * @param {URL} scriptURL
  * @returns {{ resolvedImport: URL | null, matched: boolean }}
  */
-function resolve(specifier, parsedImportMap, scriptURL) {
+export default function resolve(specifier, parsedImportMap, scriptURL) {
   const asURL = tryURLLikeSpecifierParse(specifier, scriptURL);
   const normalizedSpecifier = asURL ? asURL.href : specifier;
   const scriptURLString = scriptURL.href;
@@ -101,5 +90,3 @@ function resolve(specifier, parsedImportMap, scriptURL) {
 
   return { resolvedImport: null, matched: false };
 }
-
-module.exports = { resolve };

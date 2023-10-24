@@ -11,9 +11,6 @@
       "path": "./packages/dev-server-hmr/tsconfig.json"
     },
     {
-      "path": "./packages/import-maps-resolve/tsconfig.json"
-    },
-    {
       "path": "./packages/lit-helpers/tsconfig.json"
     },
     {

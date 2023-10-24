@@ -1,33 +1,16 @@
 /* eslint-disable no-console, no-continue */
+
+import assert from 'node:assert/strict';
+import isJSONObject from './isJSONObject.mjs';
+import tryURLLikeSpecifierParse from './tryURLLikeSpecifierParse.mjs';
+import tryURLParse from './tryURLParse.mjs';
+
 /** @typedef {import('./types').ImportMap} ImportMap */
 /** @typedef {import('./types').ScopesMap} ScopesMap */
 /** @typedef {import('./types').SpecifierMap} SpecifierMap */
 /** @typedef {import('./types').ParsedImportMap} ParsedImportMap */
 /** @typedef {import('./types').ParsedScopesMap} ParsedScopesMap */
 /** @typedef {import('./types').ParsedSpecifierMap} ParsedSpecifierMap */
-
-const _assert = require('assert');
-// NB: TS casts the `required` function to a const, then pukes on the assertion
-// see https://github.com/microsoft/TypeScript/issues/34523#issuecomment-542978853
-/**
- *
- * @param {*} x
- * @param {string|Error} [message]
- * @return {asserts x}
- */
-function assert(x, message) {
-  return _assert(x, message);
-}
-
-const { tryURLParse, tryURLLikeSpecifierParse } = require('./utils.js');
-
-/**
- * @param {*} value
- * @returns {value is object}
- */
-function isJSONObject(value) {
-  return typeof value === 'object' && value != null && !Array.isArray(value);
-}
 
 /**
  * @param {string} a
@@ -156,7 +139,7 @@ function sortAndNormalizeScopes(obj, baseURL) {
  * @param {URL} baseURL
  * @returns {ParsedImportMap}
  */
-function parse(input, baseURL) {
+export default function parse(input, baseURL) {
   if (!isJSONObject(input)) {
     throw new TypeError('Import map JSON must be an object.');
   }
@@ -195,15 +178,3 @@ function parse(input, baseURL) {
     scopes: sortedAndNormalizedScopes,
   };
 }
-
-/**
- * @param {string} input
- * @param {URL} baseURL
- * @returns {ParsedImportMap}
- */
-function parseFromString(input, baseURL) {
-  const importMap = /** @type {ImportMap} */ (JSON.parse(input));
-  return parse(importMap, baseURL);
-}
-
-module.exports = { parse, parseFromString };

@@ -1,11 +1,8 @@
-/* eslint-disable */
-// @ts-nocheck
-const assert = require('assert');
-const fs = require('fs');
-const chai = require('chai');
-const { pathToFileURL } = require('url');
-const { parseFromString } = require('../index');
-const { resolve } = require('../src/resolver.js');
+import assert from 'node:assert';
+import fs from 'node:fs';
+import parseFromString from '../parseFromString.mjs';
+import resolve from '../resolve.mjs';
+import chai from 'chai';
 
 const { expect } = chai;
 
@@ -160,7 +157,7 @@ describe('import-maps-resolve', () => {
 
   for (const testFile of testFiles) {
     const testCase = JSON.parse(
-      fs.readFileSync(new URL(`json/${testFile}.json`, pathToFileURL(__filename)), 'utf-8'),
+      fs.readFileSync(new URL(`json/${testFile}.json`, import.meta.url), 'utf-8'),
     );
     runTests(testCase);
   }
